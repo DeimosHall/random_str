@@ -27,6 +27,11 @@ pub fn get_random_char(capital_letter: bool) -> char {
     *random_char
 }
 
+pub fn get_random_int(min: i32, max: i32) -> i32 {
+    let mut rng = thread_rng();
+    rng.gen_range(min..max)
+}
+
 pub fn get_random_string(length: usize, capital_letter: bool) -> String {
     let mut random_string = String::new();
     for _ in 0..length {

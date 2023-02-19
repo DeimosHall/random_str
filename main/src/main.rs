@@ -1,9 +1,15 @@
-use random_str;
+use random_str as random;
 
 fn main() {
-    let random_char = random_str::get_random_char(true);
+    let random_char = random::get_random_char(true);
     println!("Random char: {}", random_char);
 
-    let rnd_str = random_str::get_random_string(16, true);
+    let random_int = random::get_random_int(1, 100);
+    println!("Random int: {}", random_int);
+
+    let random_phone_number = random::get_random_int(1, 10000000);
+    println!("Random phone number: +52 343{}", random_phone_number);
+
+    let rnd_str = random::get_random_string(16, true);
     println!("Random string: {}", rnd_str);
 }
