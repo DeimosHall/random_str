@@ -32,6 +32,13 @@ pub fn get_random_int(min: i32, max: i32) -> i32 {
     rng.gen_range(min..max)
 }
 
+pub fn get_random_symbol() -> char {
+    let symbols: Vec<char> = vec!['#', '$', '%', '&', '*', '@', '^'];
+    let mut rng = thread_rng();
+    let random_symbol = symbols.choose(&mut rng).unwrap();
+    *random_symbol
+}
+
 pub fn get_random_string(length: usize, capital_letter: bool) -> String {
     let mut random_string = String::new();
     for _ in 0..length {
