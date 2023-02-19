@@ -1,0 +1,9 @@
+[package]
+name = "random_str"
+version = "0.1.0"
+edition = "2021"
+description = "Generate random strings of a given length and random chars"
+license = "MIT"
+
+[dependencies]
+rand = "0.8.5"
