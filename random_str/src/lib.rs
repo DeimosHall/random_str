@@ -31,15 +31,15 @@ use rand::prelude::*;
 /// println!("Random letter: {}", random_letter);
 /// ```
 /// Possible output: Random letter: x or Random letter: Y
-pub fn get_random_letter(lower_letter: bool, capital_letter: bool) -> char {
+pub fn get_random_letter(lowercase: bool, uppercase: bool) -> char {
     let mut chars: Vec<char> = vec![];
 
-    if lower_letter {
+    if lowercase {
         let lower_chars: Vec<char> = (b'a'..b'z').map(|c| c as char).collect();
         chars = lower_chars;
     }
     
-    if capital_letter {
+    if uppercase {
         let capital_chars: Vec<char> = (b'A'..b'Z').map(|c| c as char).collect();
         chars.extend(capital_chars);
     }
@@ -51,7 +51,7 @@ pub fn get_random_letter(lower_letter: bool, capital_letter: bool) -> char {
 
 pub fn get_random_int(min: i32, max: i32) -> i32 {
     let mut rng = thread_rng();
-    rng.gen_range(min..max)
+    rng.gen_range(min..=max)
 }
 
 pub fn get_random_symbol() -> char {
@@ -61,12 +61,32 @@ pub fn get_random_symbol() -> char {
     *random_symbol
 }
 
-pub fn get_random_string(length: usize, lower_letter: bool, capital_letter: bool) -> String {
+pub fn get_random_string(length: usize, lowercase: bool, uppercase: bool, number:bool) -> String {
+    let symbols_list: Vec<char> = vec!['#', '$', '%', '&', '*', '@', '^'];
+    let numbers_list: Vec<char> = (b'0'..b'9').map(|c| c as char).collect();
+    let cap_letters_list: Vec<char> = (b'A'..b'Z').map(|c| c as char).collect();
+    let low_letters_list: Vec<char> = (b'a'..b'z').map(|c| c as char).collect();
+    let mut random_string: Vec<char> = vec![];
+
+    if lowercase {
+        random_string.extend(low_letters_list);
+    }
+    if uppercase {
+        random_string.extend(cap_letters_list);
+    }
+    if number {
+        random_string.extend(numbers_list);
+    }
+
+    let mut rng = thread_rng();
+    (0..length).map(|_| *random_string.choose(&mut rng).unwrap()).collect()
+
+    /*
     let mut random_string = String::new();
     for _ in 0..length {
-        random_string.push(get_random_letter(lower_letter, capital_letter));
+        //random_string.push(get_random_letter(lower_letter, capital_letter));
     }
-    random_string
+    random_string */
 }
 
 #[cfg(test)]
