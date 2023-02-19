@@ -2,4 +2,5 @@
 
 members = [
     "random_str",
+    "main",
 ]
