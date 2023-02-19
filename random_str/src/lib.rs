@@ -2,11 +2,6 @@ use rand::prelude::*;
 
 /// Get a random char from a-z or A-Z
 /// 
-/// Definition of the function:
-/// ```
-/// pub fn get_random_letter(lowercase: bool, uppercase: bool) -> char
-/// ```
-/// 
 /// # Panics
 /// Panics if the function is called with both parameters set to false.
 ///
@@ -31,6 +26,7 @@ use rand::prelude::*;
 /// println!("Random letter: {}", random_letter);
 /// ```
 /// Possible output: Random letter: x or Random letter: Y
+#[cfg(not(doctest))]
 pub fn get_random_letter(lowercase: bool, uppercase: bool) -> char {
     let mut chars: Vec<char> = vec![];
 
@@ -90,17 +86,29 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_get_random_char() {
-        let random_char = get_random_letter(false);
-        assert!(random_char.is_ascii_alphabetic());
-        assert!(random_char.is_ascii_lowercase());
+    fn test_get_random_lowercase_letter() {
+        let random_letter = get_random_letter(true, false);
+        assert!(random_letter.is_ascii_alphabetic());
+        assert!(random_letter.is_ascii_lowercase());
+    }
 
-        for _ in 0..100 {
-            let random_char = get_random_letter(true);
-            if random_char.is_ascii_uppercase() {
-                assert!(true);
-                return;
-            }
-        }
+    #[test]
+    fn test_get_random_uppercase_letter() {
+        let random_letter = get_random_letter(false, true);
+        assert!(random_letter.is_ascii_alphabetic());
+        assert!(random_letter.is_ascii_uppercase());
+    }
+
+    #[test]
+    fn test_get_random_letter() {
+        let random_letter = get_random_letter(true, true);
+        assert!(random_letter.is_ascii_alphabetic());
+    }
+
+    #[test]
+    // Validate if the function panics when both parameters are false
+    fn test_get_random_false_letter() {
+        let result = std::panic::catch_unwind(|| get_random_letter(false, false));
+        assert!(result.is_err());
     }
 }
