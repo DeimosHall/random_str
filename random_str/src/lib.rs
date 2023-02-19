@@ -81,6 +81,11 @@ pub fn get_random_string(length: usize, lowercase: bool, uppercase: bool, number
     (0..length).map(|_| *random_string.choose(&mut rng).unwrap()).collect()
 }
 
+pub fn get_random_bool() -> bool {
+    let mut rng = thread_rng();
+    rng.gen_bool(0.5)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

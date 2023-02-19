@@ -16,4 +16,7 @@ fn main() {
 
     let random_password = random::get_random_string(16, true, true, true, true);
     println!("Random password: {}", random_password);
+
+    let random_bool = random::get_random_bool();
+    println!("Random bool: {}", random_bool);
 }
