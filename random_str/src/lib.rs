@@ -4,7 +4,7 @@ use rand::prelude::*;
 /// 
 /// Definition of the function:
 /// ```
-/// pub fn get_random_letter(lower_letter: bool, capital_letter: bool) -> char
+/// pub fn get_random_letter(lowercase: bool, uppercase: bool) -> char
 /// ```
 /// 
 /// # Panics
@@ -61,7 +61,7 @@ pub fn get_random_symbol() -> char {
     *random_symbol
 }
 
-pub fn get_random_string(length: usize, lowercase: bool, uppercase: bool, number:bool) -> String {
+pub fn get_random_string(length: usize, lowercase: bool, uppercase: bool, number: bool, symbol: bool) -> String {
     let symbols_list: Vec<char> = vec!['#', '$', '%', '&', '*', '@', '^'];
     let numbers_list: Vec<char> = (b'0'..b'9').map(|c| c as char).collect();
     let cap_letters_list: Vec<char> = (b'A'..b'Z').map(|c| c as char).collect();
@@ -77,16 +77,12 @@ pub fn get_random_string(length: usize, lowercase: bool, uppercase: bool, number
     if number {
         random_string.extend(numbers_list);
     }
+    if symbol {
+        random_string.extend(symbols_list);
+    }
 
     let mut rng = thread_rng();
     (0..length).map(|_| *random_string.choose(&mut rng).unwrap()).collect()
-
-    /*
-    let mut random_string = String::new();
-    for _ in 0..length {
-        //random_string.push(get_random_letter(lower_letter, capital_letter));
-    }
-    random_string */
 }
 
 #[cfg(test)]
