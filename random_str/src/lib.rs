@@ -27,6 +27,14 @@ pub fn get_random_char(capital_letter: bool) -> char {
     *random_char
 }
 
+pub fn get_random_string(length: usize, capital_letter: bool) -> String {
+    let mut random_string = String::new();
+    for _ in 0..length {
+        random_string.push(get_random_char(capital_letter));
+    }
+    random_string
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
