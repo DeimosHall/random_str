@@ -1,6 +1,10 @@
 //! This crate provides a set of functions to generate random strings, numbers, letters, symbols and booleans.
 use rand::prelude::*;
 
+fn get_symbols_list() -> Vec<char> {
+    vec!['#', '$', '%', '&', '*', '@', '^', '!']
+}
+
 /// Get a random char from a-z or A-Z
 /// 
 /// # Panics
@@ -81,7 +85,7 @@ pub fn get_int(min: i32, max: i32) -> i32 {
 /// ```
 #[cfg(not(doctest))]
 pub fn get_symbol() -> char {
-    let symbols: Vec<char> = vec!['#', '$', '%', '&', '*', '@', '^'];
+    let symbols = get_symbols_list();
     let mut rng = thread_rng();
     let random_symbol = symbols.choose(&mut rng).unwrap();
     *random_symbol
@@ -102,8 +106,8 @@ pub fn get_symbol() -> char {
 /// println!("Random password: {}", random_password);
 /// ```
 #[cfg(not(doctest))]
-pub fn get_string(length: usize, lowercase: bool, uppercase: bool, number: bool, symbol: bool) -> String {
-    let symbols_list: Vec<char> = vec!['#', '$', '%', '&', '*', '@', '^'];
+pub fn get_string(length: usize, lowercase: bool, uppercase: bool, numbers: bool, symbols: bool) -> String {
+    let symbols_list: Vec<char> = get_symbols_list();
     let numbers_list: Vec<char> = (b'0'..b'9').map(|c| c as char).collect();
     let cap_letters_list: Vec<char> = (b'A'..b'Z').map(|c| c as char).collect();
     let low_letters_list: Vec<char> = (b'a'..b'z').map(|c| c as char).collect();
@@ -115,10 +119,10 @@ pub fn get_string(length: usize, lowercase: bool, uppercase: bool, number: bool,
     if uppercase {
         random_string.extend(cap_letters_list);
     }
-    if number {
+    if numbers {
         random_string.extend(numbers_list);
     }
-    if symbol {
+    if symbols {
         random_string.extend(symbols_list);
     }
 
