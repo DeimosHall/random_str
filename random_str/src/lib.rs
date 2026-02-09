@@ -1,39 +1,54 @@
 //! This crate provides a set of functions to generate random strings, numbers, letters, symbols and booleans.
+use std::sync::LazyLock;
+
 use rand::prelude::*;
+
+static LOWERCASE: LazyLock<Vec<char>> = LazyLock::new(|| {
+    (b'a'..b'z').map(|c| c as char).collect()
+});
+static UPPERCASE: LazyLock<Vec<char>> = LazyLock::new(|| {
+    (b'A'..b'Z').map(|c| c as char).collect()
+});
+static NUMBERS: LazyLock<Vec<char>> = LazyLock::new(|| {
+    (b'0'..b'9').map(|c| c as char).collect()
+});
+static SYMBOLS: LazyLock<Vec<char>> = LazyLock::new(|| {
+    vec!['#', '$', '%', '&', '*', '@', '^', '!']
+});
 
 fn get_symbols_list() -> Vec<char> {
     vec!['#', '$', '%', '&', '*', '@', '^', '!']
 }
 
 pub struct RandomCharBuilder {
-    options: Vec<char>
+    options: Vec<char>,
 }
 
 impl RandomCharBuilder {
     pub fn new() -> Self {
         RandomCharBuilder { options: Vec::new() }
     }
-    
+
     pub fn with_lowercase(mut self) -> Self {
-        self.options.extend((b'a'..b'z').map(|c| c as char));
+        self.options.extend(LOWERCASE.iter());
         self
     }
-    
+
     pub fn with_uppercase(mut self) -> Self {
-        self.options.extend((b'A'..b'Z').map(|c| c as char));
+        self.options.extend(UPPERCASE.iter());
         self
     }
-    
+
     pub fn with_numbers(mut self) -> Self {
-        self.options.extend((b'0'..b'9').map(|c| c as char));
+        self.options.extend(NUMBERS.iter());
         self
     }
-    
+
     pub fn with_symbols(mut self) -> Self {
-        self.options.extend(get_symbols_list());
+        self.options.extend(SYMBOLS.iter());
         self
     }
-    
+
     pub fn build(self) -> Option<char> {
         let mut rng = thread_rng();
         self.options.choose(&mut rng).copied()
