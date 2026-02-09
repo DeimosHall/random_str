@@ -60,6 +60,10 @@ impl RandomCharBuilder {
     }
 
     pub fn build(self) -> Option<char> {
+        if self.options.is_empty() {
+            return None;
+        }
+        
         let mut rng = thread_rng();
         self.options.choose(&mut rng).copied()
     }
@@ -81,13 +85,18 @@ impl RandomStringBuilder {
         RandomStringBuilder { options: Vec::new(), length: 16 }
     }
     
-    pub fn with_length(mut self, length: usize) {
+    pub fn with_length(mut self, length: usize) -> Self {
         self.length = length;
+        self
     }
     
-    pub fn build(mut self) -> String {
+    pub fn build(mut self) -> Option<String> {
+        if self.options.is_empty() {
+            return None;
+        }
+        
         let mut rng = thread_rng();
-        (0..self.length).map(|_| *self.options().choose(&mut rng).unwrap()).collect()
+        Some((0..self.length).map(|_| *self.options().choose(&mut rng).unwrap()).collect())
     }
 }
 
