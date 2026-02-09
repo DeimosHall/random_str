@@ -20,8 +20,38 @@ fn get_symbols_list() -> Vec<char> {
     vec!['#', '$', '%', '&', '*', '@', '^', '!']
 }
 
+pub trait CharBuilder {
+    fn options(&mut self) -> &mut Vec<char>;
+
+    fn with_lowercase(mut self) -> Self where Self: Sized {
+        self.options().extend(LOWERCASE.iter());
+        self
+    }
+
+    fn with_uppercase(mut self) -> Self where Self: Sized {
+        self.options().extend(UPPERCASE.iter());
+        self
+    }
+
+    fn with_numbers(mut self) -> Self where Self: Sized {
+        self.options().extend(NUMBERS.iter());
+        self
+    }
+
+    fn with_symbols(mut self) -> Self where Self: Sized {
+        self.options().extend(SYMBOLS.iter());
+        self
+    }
+}
+
 pub struct RandomCharBuilder {
-    options: Vec<char>,
+    options: Vec<char>
+}
+
+impl CharBuilder for RandomCharBuilder {
+    fn options(&mut self) -> &mut Vec<char> {
+        &mut self.options
+    }
 }
 
 impl RandomCharBuilder {
@@ -29,29 +59,35 @@ impl RandomCharBuilder {
         RandomCharBuilder { options: Vec::new() }
     }
 
-    pub fn with_lowercase(mut self) -> Self {
-        self.options.extend(LOWERCASE.iter());
-        self
-    }
-
-    pub fn with_uppercase(mut self) -> Self {
-        self.options.extend(UPPERCASE.iter());
-        self
-    }
-
-    pub fn with_numbers(mut self) -> Self {
-        self.options.extend(NUMBERS.iter());
-        self
-    }
-
-    pub fn with_symbols(mut self) -> Self {
-        self.options.extend(SYMBOLS.iter());
-        self
-    }
-
     pub fn build(self) -> Option<char> {
         let mut rng = thread_rng();
         self.options.choose(&mut rng).copied()
+    }
+}
+
+pub struct RandomStringBuilder {
+    options: Vec<char>,
+    length: usize
+}
+
+impl CharBuilder for RandomStringBuilder {
+    fn options(&mut self) -> &mut Vec<char> {
+        &mut self.options
+    }
+}
+
+impl RandomStringBuilder {
+    pub fn new() -> Self {
+        RandomStringBuilder { options: Vec::new(), length: 16 }
+    }
+    
+    pub fn with_length(mut self, length: usize) {
+        self.length = length;
+    }
+    
+    pub fn build(mut self) -> String {
+        let mut rng = thread_rng();
+        (0..self.length).map(|_| *self.options().choose(&mut rng).unwrap()).collect()
     }
 }
 

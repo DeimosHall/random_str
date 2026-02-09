@@ -1,4 +1,4 @@
-use random_str::{self as random, RandomCharBuilder};
+use random_str::{self as random, CharBuilder, RandomCharBuilder, RandomStringBuilder};
 
 fn main() {
     let lowercase = false;
@@ -30,6 +30,14 @@ fn main() {
     let numbers = true;
     let symbols = true;
     let random_password = random::get_string(length, lowercase, uppercase, numbers, symbols);
+    println!("Random password: {}", random_password);
+    
+    let random_password = RandomStringBuilder::new()
+        .with_lowercase()
+        .with_uppercase()
+        .with_numbers()
+        .with_symbols()
+        .build();
     println!("Random password: {}", random_password);
 
     let random_bool = random::get_bool();
