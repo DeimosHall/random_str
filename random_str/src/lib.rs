@@ -5,8 +5,43 @@ fn get_symbols_list() -> Vec<char> {
     vec!['#', '$', '%', '&', '*', '@', '^', '!']
 }
 
+pub struct RandomCharBuilder {
+    options: Vec<char>
+}
+
+impl RandomCharBuilder {
+    pub fn new() -> Self {
+        RandomCharBuilder { options: Vec::new() }
+    }
+    
+    pub fn with_lowercase(mut self) -> Self {
+        self.options.extend((b'a'..b'z').map(|c| c as char));
+        self
+    }
+    
+    pub fn with_uppercase(mut self) -> Self {
+        self.options.extend((b'A'..b'Z').map(|c| c as char));
+        self
+    }
+    
+    pub fn with_numbers(mut self) -> Self {
+        self.options.extend((b'0'..b'9').map(|c| c as char));
+        self
+    }
+    
+    pub fn with_symbols(mut self) -> Self {
+        self.options.extend(get_symbols_list());
+        self
+    }
+    
+    pub fn build(self) -> Option<char> {
+        let mut rng = thread_rng();
+        self.options.choose(&mut rng).copied()
+    }
+}
+
 /// Get a random char from a-z or A-Z
-/// 
+///
 /// # Panics
 /// Panics if the function is called with both parameters set to false
 ///
@@ -15,7 +50,7 @@ fn get_symbols_list() -> Vec<char> {
 /// ```
 /// use random_str as random;
 /// ```
-/// 
+///
 /// ```
 /// let random_letter = random::get_letter(true, false);
 /// println!("Random letter: {}", random_char);
@@ -39,7 +74,7 @@ pub fn get_letter(lowercase: bool, uppercase: bool) -> char {
         let lower_chars: Vec<char> = (b'a'..b'z').map(|c| c as char).collect();
         chars = lower_chars;
     }
-    
+
     if uppercase {
         let capital_chars: Vec<char> = (b'A'..b'Z').map(|c| c as char).collect();
         chars.extend(capital_chars);
@@ -51,12 +86,12 @@ pub fn get_letter(lowercase: bool, uppercase: bool) -> char {
 }
 
 /// Get a random number (i32) from a minimum and maximum value
-/// 
+///
 /// # Panics
 /// Panics if min is greater than max
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```
 /// use random_str as random;
 /// ```
@@ -73,9 +108,9 @@ pub fn get_int(min: i32, max: i32) -> i32 {
 
 /// Get a random symbol from a list of symbols
 /// Possible symbols are: #, $, %, &, *, @, ^
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```
 /// use random_str as random;
 /// ```
@@ -92,12 +127,12 @@ pub fn get_symbol() -> char {
 }
 
 /// Get a random string with a given length and a set of characters
-/// 
+///
 /// # Panics
 /// Panics if the function is called with all parameters set to false
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```
 /// use random_str as random;
 /// ```
@@ -131,9 +166,9 @@ pub fn get_string(length: usize, lowercase: bool, uppercase: bool, numbers: bool
 }
 
 /// Get a random boolean value
-/// 
+///
 /// # Examples
-/// 
+///
 /// ```
 /// use random_str as random;
 /// ```

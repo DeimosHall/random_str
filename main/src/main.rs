@@ -1,10 +1,15 @@
-use random_str as random;
+use random_str::{self as random, RandomCharBuilder};
 
 fn main() {
-    let lowercase = true;
+    let lowercase = false;
     let uppercase = true;
 
-    let random_letter = random::get_letter(lowercase, uppercase);
+    // Random letter including from 'a' to 'z' and from 'A' to 'Z'
+    let random_letter = RandomCharBuilder::new()
+        .with_lowercase()
+        .with_uppercase()
+        .build()
+        .unwrap();
     println!("Random letter: {}", random_letter);
 
     let random_symbol = random::get_symbol();
