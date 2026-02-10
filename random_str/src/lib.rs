@@ -16,6 +16,7 @@ static SYMBOLS: LazyLock<Vec<char>> = LazyLock::new(|| {
     vec!['#', '$', '%', '&', '*', '@', '^', '!']
 });
 
+// TODO: delete
 fn get_symbols_list() -> Vec<char> {
     vec!['#', '$', '%', '&', '*', '@', '^', '!']
 }
@@ -63,7 +64,7 @@ impl RandomCharBuilder {
         if self.options.is_empty() {
             return None;
         }
-        
+
         let mut rng = thread_rng();
         self.options.choose(&mut rng).copied()
     }
@@ -84,17 +85,17 @@ impl RandomStringBuilder {
     pub fn new() -> Self {
         RandomStringBuilder { options: Vec::new(), length: 16 }
     }
-    
+
     pub fn with_length(mut self, length: usize) -> Self {
         self.length = length;
         self
     }
-    
+
     pub fn build(mut self) -> Option<String> {
         if self.options.is_empty() {
             return None;
         }
-        
+
         let mut rng = thread_rng();
         Some((0..self.length).map(|_| *self.options().choose(&mut rng).unwrap()).collect())
     }
@@ -127,6 +128,7 @@ impl RandomStringBuilder {
 /// ```
 /// Possible output: Random letter: x or Random letter: Y
 #[cfg(not(doctest))]
+#[deprecated(since = "1.0.0", note = "Use RandomCharBuilder instead")]
 pub fn get_letter(lowercase: bool, uppercase: bool) -> char {
     let mut chars: Vec<char> = vec![];
 
@@ -201,6 +203,7 @@ pub fn get_symbol() -> char {
 /// println!("Random password: {}", random_password);
 /// ```
 #[cfg(not(doctest))]
+#[deprecated(since = "1.0.0", note = "Use RandomStringBuilder instead")]
 pub fn get_string(length: usize, lowercase: bool, uppercase: bool, numbers: bool, symbols: bool) -> String {
     let symbols_list: Vec<char> = get_symbols_list();
     let numbers_list: Vec<char> = (b'0'..b'9').map(|c| c as char).collect();
@@ -243,6 +246,7 @@ pub fn get_bool() -> bool {
     rng.gen_bool(0.5)
 }
 
+#[deprecated(since = "1.0.0", note = "It will be removed")]
 pub fn get_char() -> char {
     let chars: Vec<char> = (b'!'..b'~').map(|c| c as char).collect();
     let mut rng = thread_rng();
