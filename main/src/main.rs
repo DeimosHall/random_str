@@ -34,6 +34,6 @@ fn main() {
         .build();
     println!("Random password: {}", random_password.unwrap());
 
-    let random_bool = random::get_bool();
+    let random_bool = random::bool();
     println!("Random bool: {}", random_bool);
 }

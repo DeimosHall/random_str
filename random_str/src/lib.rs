@@ -4,13 +4,13 @@ pub mod random {
     use rand::seq::IndexedMutRandom;
 
     static LOWERCASE: LazyLock<Vec<char>> = LazyLock::new(|| {
-        (b'a'..b'z').map(|c| c as char).collect()
+        (b'a'..=b'z').map(|c| c as char).collect()
     });
     static UPPERCASE: LazyLock<Vec<char>> = LazyLock::new(|| {
-        (b'A'..b'Z').map(|c| c as char).collect()
+        (b'A'..=b'Z').map(|c| c as char).collect()
     });
     static NUMBERS: LazyLock<Vec<char>> = LazyLock::new(|| {
-        (b'0'..b'9').map(|c| c as char).collect()
+        (b'0'..=b'9').map(|c| c as char).collect()
     });
     static SYMBOLS: LazyLock<Vec<char>> = LazyLock::new(|| {
         // TODO: add more symbols
@@ -66,6 +66,14 @@ pub mod random {
         }
     }
 
+    impl Default for RandomCharBuilder {
+        fn default() -> Self {
+            Self::new()
+        }
+    }
+
+    /// A random String builder, providig fined-grained control
+    /// over what a random String should contain.
     pub struct RandomStringBuilder {
         options: Vec<char>,
         length: usize
@@ -93,7 +101,13 @@ pub mod random {
             }
 
             let mut rng = rand::rng();
-            Some((0..self.length).map(|_| *self.options().choose_mut(&mut rng).unwrap()).collect())
+            Some((0..=self.length).map(|_| *self.options().choose_mut(&mut rng).unwrap()).collect())
+        }
+    }
+
+    impl Default for RandomStringBuilder {
+        fn default() -> Self {
+            Self::new()
         }
     }
 
@@ -134,12 +148,12 @@ pub mod random {
         let mut chars: Vec<char> = vec![];
 
         if lowercase {
-            let lower_chars: Vec<char> = (b'a'..b'z').map(|c| c as char).collect();
+            let lower_chars: Vec<char> = (b'a'..=b'z').map(|c| c as char).collect();
             chars = lower_chars;
         }
 
         if uppercase {
-            let capital_chars: Vec<char> = (b'A'..b'Z').map(|c| c as char).collect();
+            let capital_chars: Vec<char> = (b'A'..=b'Z').map(|c| c as char).collect();
             chars.extend(capital_chars);
         }
 
@@ -209,9 +223,9 @@ pub mod random {
     #[deprecated(since = "1.0.0", note = "Use RandomStringBuilder instead")]
     pub fn get_string(length: usize, lowercase: bool, uppercase: bool, numbers: bool, symbols: bool) -> String {
         let symbols_list: Vec<char> = get_symbols_list();
-        let numbers_list: Vec<char> = (b'0'..b'9').map(|c| c as char).collect();
-        let cap_letters_list: Vec<char> = (b'A'..b'Z').map(|c| c as char).collect();
-        let low_letters_list: Vec<char> = (b'a'..b'z').map(|c| c as char).collect();
+        let numbers_list: Vec<char> = (b'0'..=b'9').map(|c| c as char).collect();
+        let cap_letters_list: Vec<char> = (b'A'..=b'Z').map(|c| c as char).collect();
+        let low_letters_list: Vec<char> = (b'a'..=b'z').map(|c| c as char).collect();
         let mut random_string: Vec<char> = vec![];
 
         if lowercase {
@@ -228,7 +242,7 @@ pub mod random {
         }
 
         let mut rng = rand::rng();
-        (0..length).map(|_| *random_string.choose_mut(&mut rng).unwrap()).collect()
+        (0..=length).map(|_| *random_string.choose_mut(&mut rng).unwrap()).collect()
     }
 
     /// Get a random boolean value
@@ -244,7 +258,24 @@ pub mod random {
     /// ```
     /// Possible output: Random boolean: true or Random boolean: false
     #[cfg(not(doctest))]
+    #[deprecated(since = "1.0.0", note = "Use bool() instead")]
     pub fn get_bool() -> bool {
+        bool()
+    }
+
+    /// Get a random bool value with a probability of 50%
+    ///
+    /// # Example
+    ///
+    /// ```
+    /// let random_bool = random::bool();
+    /// println!("Random bool: {}", random_bool);
+    /// ```
+    /// Posible output:
+    /// ```txt
+    /// Random boolean: true
+    /// ```
+    pub fn bool() -> bool {
         use rand::RngExt;
 
         let mut rng = rand::rng();
@@ -253,9 +284,9 @@ pub mod random {
 
     #[deprecated(since = "1.0.0", note = "It will be removed")]
     pub fn get_char() -> char {
-        let mut chars: Vec<char> = (b'!'..b'~').map(|c| c as char).collect();
+        let mut chars: Vec<char> = (b'!'..=b'~').map(|c| c as char).collect();
         let mut rng = rand::rng();
-        chars.choose_mut(&mut rng).unwrap().clone()
+        *chars.choose_mut(&mut rng).unwrap()
     }
 
     #[cfg(test)]
