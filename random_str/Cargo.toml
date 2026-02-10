@@ -6,4 +6,4 @@ description = "Generate random strings, chars, booleans, and integers."
 license = "MIT"
 
 [dependencies]
-rand = "0.8.5"
+rand = "0.10.0"

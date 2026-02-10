@@ -1,7 +1,7 @@
 //! This crate provides a set of functions to generate random strings, numbers, letters, symbols and booleans.
 use std::sync::LazyLock;
 
-use rand::prelude::*;
+use rand::seq::IndexedMutRandom;
 
 static LOWERCASE: LazyLock<Vec<char>> = LazyLock::new(|| {
     (b'a'..b'z').map(|c| c as char).collect()
@@ -60,13 +60,13 @@ impl RandomCharBuilder {
         RandomCharBuilder { options: Vec::new() }
     }
 
-    pub fn build(self) -> Option<char> {
+    pub fn build(mut self) -> Option<char> {
         if self.options.is_empty() {
             return None;
         }
 
-        let mut rng = thread_rng();
-        self.options.choose(&mut rng).copied()
+        let mut rng = rand::rng();
+        self.options.choose_mut(&mut rng).copied()
     }
 }
 
@@ -96,8 +96,8 @@ impl RandomStringBuilder {
             return None;
         }
 
-        let mut rng = thread_rng();
-        Some((0..self.length).map(|_| *self.options().choose(&mut rng).unwrap()).collect())
+        let mut rng = rand::rng();
+        Some((0..self.length).map(|_| *self.options().choose_mut(&mut rng).unwrap()).collect())
     }
 }
 
@@ -142,8 +142,8 @@ pub fn get_letter(lowercase: bool, uppercase: bool) -> char {
         chars.extend(capital_chars);
     }
 
-    let mut rng = thread_rng();
-    let random_char = chars.choose(&mut rng).unwrap();
+    let mut rng = rand::rng();
+    let random_char = chars.choose_mut(&mut rng).unwrap();
     *random_char
 }
 
@@ -164,8 +164,10 @@ pub fn get_letter(lowercase: bool, uppercase: bool) -> char {
 /// Possible output: Random number: 3
 #[cfg(not(doctest))]
 pub fn get_int(min: i32, max: i32) -> i32 {
-    let mut rng = thread_rng();
-    rng.gen_range(min..=max)
+    use rand::RngExt;
+
+    let mut rng = rand::rng();
+    rng.random_range(min..=max)
 }
 
 /// Get a random symbol from a list of symbols
@@ -182,9 +184,9 @@ pub fn get_int(min: i32, max: i32) -> i32 {
 /// ```
 #[cfg(not(doctest))]
 pub fn get_symbol() -> char {
-    let symbols = get_symbols_list();
-    let mut rng = thread_rng();
-    let random_symbol = symbols.choose(&mut rng).unwrap();
+    let mut symbols = get_symbols_list();
+    let mut rng = rand::rng();
+    let random_symbol = symbols.choose_mut(&mut rng).unwrap();
     *random_symbol
 }
 
@@ -224,8 +226,8 @@ pub fn get_string(length: usize, lowercase: bool, uppercase: bool, numbers: bool
         random_string.extend(symbols_list);
     }
 
-    let mut rng = thread_rng();
-    (0..length).map(|_| *random_string.choose(&mut rng).unwrap()).collect()
+    let mut rng = rand::rng();
+    (0..length).map(|_| *random_string.choose_mut(&mut rng).unwrap()).collect()
 }
 
 /// Get a random boolean value
@@ -242,15 +244,17 @@ pub fn get_string(length: usize, lowercase: bool, uppercase: bool, numbers: bool
 /// Possible output: Random boolean: true or Random boolean: false
 #[cfg(not(doctest))]
 pub fn get_bool() -> bool {
-    let mut rng = thread_rng();
-    rng.gen_bool(0.5)
+    use rand::RngExt;
+
+    let mut rng = rand::rng();
+    rng.random_bool(0.5)
 }
 
 #[deprecated(since = "1.0.0", note = "It will be removed")]
 pub fn get_char() -> char {
-    let chars: Vec<char> = (b'!'..b'~').map(|c| c as char).collect();
-    let mut rng = thread_rng();
-    chars.choose(&mut rng).unwrap().clone()
+    let mut chars: Vec<char> = (b'!'..b'~').map(|c| c as char).collect();
+    let mut rng = rand::rng();
+    chars.choose_mut(&mut rng).unwrap().clone()
 }
 
 #[cfg(test)]
