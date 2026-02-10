@@ -41,6 +41,21 @@ pub mod random {
         }
     }
 
+    /// A random String builder, providig fined-grained control
+    /// over what a random String should contain.
+    ///
+    /// If no charsets are supplied, the build() step will
+    /// produce a `None` value.
+    ///
+    /// ## Examples
+    /// Random letter including from 'a' to 'z' and from 'A' to 'Z'
+    /// ```
+    /// let random_letter: Option<char> = RandomCharBuilder::new()
+    ///     .with_lowercase()
+    ///     .with_uppercase()
+    ///     .build();
+    /// println!("Random letter: {}", random_letter.unwrap());
+    /// ```
     pub struct RandomCharBuilder {
         options: Vec<char>
     }
@@ -74,6 +89,31 @@ pub mod random {
 
     /// A random String builder, providig fined-grained control
     /// over what a random String should contain.
+    ///
+    /// If no charsets are supplied, the build() step will
+    /// produce a `None` value.
+    ///
+    /// ## Examples
+    /// Random phone number
+    /// ```
+    /// let digits: Option<String> = RandomStringBuilder::new()
+    ///     .with_length(10)
+    ///     .with_numbers()
+    ///     .build();
+    /// let random_phone_number = format!("+52 {}", digits.unwrap());
+    /// println!("Random phone number: {}", random_phone_number);
+    /// ```
+    /// Random password
+    /// ```
+    /// let random_password: Option<String> = RandomStringBuilder::new()
+    ///     .with_length(32)  // Optional, 16 as default
+    ///     .with_lowercase()
+    ///     .with_uppercase()
+    ///     .with_numbers()
+    ///     .with_symbols()
+    ///    .build();
+    /// println!("Random password: {}", random_password.unwrap());
+    /// ```
     pub struct RandomStringBuilder {
         options: Vec<char>,
         length: usize
@@ -178,6 +218,7 @@ pub mod random {
     /// ```
     /// Possible output: Random number: 3
     #[cfg(not(doctest))]
+    // TODO: add number() with generic params
     pub fn get_int(min: i32, max: i32) -> i32 {
         use rand::RngExt;
 
@@ -198,6 +239,7 @@ pub mod random {
     /// println!("Random symbol: {}", random_symbol);
     /// ```
     #[cfg(not(doctest))]
+    // TODO: add symbol()
     pub fn get_symbol() -> char {
         let mut symbols = get_symbols_list();
         let mut rng = rand::rng();
