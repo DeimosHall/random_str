@@ -1,4 +1,4 @@
-use random_str::{self as random, CharBuilder, RandomCharBuilder, RandomStringBuilder};
+use random_str::random::{self, CharBuilder, RandomCharBuilder, RandomStringBuilder};
 
 fn main() {
     // Random letter including from 'a' to 'z' and from 'A' to 'Z'
