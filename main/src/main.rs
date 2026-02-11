@@ -1,35 +1,39 @@
-use random_str as random;
+use random_str::random::{self, CharBuilder, RandomCharBuilder, RandomStringBuilder};
 
 fn main() {
-    let lowercase = true;
-    let uppercase = true;
+    // Random letter including from 'a' to 'z' and from 'A' to 'Z'
+    let random_letter: Option<char> = RandomCharBuilder::new()
+        .with_lowercase()
+        .with_uppercase()
+        .build();
+    println!("Random letter: {}", random_letter.unwrap());
 
-    let random_letter = random::get_letter(lowercase, uppercase);
-    println!("Random letter: {}", random_letter);
+    let random_symbol: Option<char> = RandomCharBuilder::new()
+        .with_symbols()
+        .build();
+    println!("Random symbol: {}", random_symbol.unwrap());
 
-    let random_symbol = random::get_symbol();
-    println!("Random symbol: {}", random_symbol);
-
-    let mut min = 0;
-    let mut max = 9;
-    let random_number = random::get_int(min, max);
+    let min = 0;
+    let max = 9;
+    let random_number = random::get_int(min, max); // Between 0 and 9
     println!("Random number: {}", random_number);
 
-    min = 1000000;
-    max = 9999999;
-    let seven_digits = random::get_int(min, max); // 7 digits
-    let random_phone_number = format!("+52 343{}", seven_digits);
+    let digits: Option<String> = RandomStringBuilder::new()
+        .with_length(10)
+        .with_numbers()
+        .build();
+    let random_phone_number = format!("+52 {}", digits.unwrap());
     println!("Random phone number: {}", random_phone_number);
 
-    let length = 16;
-    let numbers = true;
-    let symbols = true;
-    let random_password = random::get_string(length, lowercase, uppercase, numbers, symbols);
-    println!("Random password: {}", random_password);
+    let random_password: Option<String> = RandomStringBuilder::new()
+        .with_length(32)  // Optional, 16 as default
+        .with_lowercase()
+        .with_uppercase()
+        .with_numbers()
+        .with_symbols()
+        .build();
+    println!("Random password: {}", random_password.unwrap());
 
-    let random_bool = random::get_bool();
+    let random_bool = random::bool();
     println!("Random bool: {}", random_bool);
-
-    let random_char = random::get_char();
-    println!("Random char: {}", random_char);
 }
