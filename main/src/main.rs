@@ -12,11 +12,12 @@ fn main() {
         .with_symbols()
         .build();
     println!("Random symbol: {}", random_symbol.unwrap());
-
-    let min = 0;
-    let max = 9;
-    let random_number = random::get_int(min, max); // Between 0 and 9
+    
+    let random_number = random::number(0..9);
     println!("Random number: {}", random_number);
+    
+    let another_random_number = random::number(1.0..2.0);
+    println!("Random float number: {}", another_random_number);
 
     let digits: Option<String> = RandomStringBuilder::new()
         .with_length(10)

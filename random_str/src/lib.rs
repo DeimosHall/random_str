@@ -1,17 +1,17 @@
 //! This crate provides a set of functions to generate random strings, numbers, letters, symbols and booleans.
 pub mod random {
+    use rand::{
+        distr::uniform::{SampleRange, SampleUniform},
+        seq::IndexedMutRandom,
+    };
     use std::sync::LazyLock;
-    use rand::seq::IndexedMutRandom;
 
-    static LOWERCASE: LazyLock<Vec<char>> = LazyLock::new(|| {
-        (b'a'..=b'z').map(|c| c as char).collect()
-    });
-    static UPPERCASE: LazyLock<Vec<char>> = LazyLock::new(|| {
-        (b'A'..=b'Z').map(|c| c as char).collect()
-    });
-    static NUMBERS: LazyLock<Vec<char>> = LazyLock::new(|| {
-        (b'0'..=b'9').map(|c| c as char).collect()
-    });
+    static LOWERCASE: LazyLock<Vec<char>> =
+        LazyLock::new(|| (b'a'..=b'z').map(|c| c as char).collect());
+    static UPPERCASE: LazyLock<Vec<char>> =
+        LazyLock::new(|| (b'A'..=b'Z').map(|c| c as char).collect());
+    static NUMBERS: LazyLock<Vec<char>> =
+        LazyLock::new(|| (b'0'..=b'9').map(|c| c as char).collect());
     static SYMBOLS: LazyLock<Vec<char>> = LazyLock::new(|| {
         // TODO: add more symbols
         vec!['#', '$', '%', '&', '*', '@', '^', '!']
@@ -20,22 +20,34 @@ pub mod random {
     pub trait CharBuilder {
         fn options(&mut self) -> &mut Vec<char>;
 
-        fn with_lowercase(mut self) -> Self where Self: Sized {
+        fn with_lowercase(mut self) -> Self
+        where
+            Self: Sized,
+        {
             self.options().extend(LOWERCASE.iter());
             self
         }
 
-        fn with_uppercase(mut self) -> Self where Self: Sized {
+        fn with_uppercase(mut self) -> Self
+        where
+            Self: Sized,
+        {
             self.options().extend(UPPERCASE.iter());
             self
         }
 
-        fn with_numbers(mut self) -> Self where Self: Sized {
+        fn with_numbers(mut self) -> Self
+        where
+            Self: Sized,
+        {
             self.options().extend(NUMBERS.iter());
             self
         }
 
-        fn with_symbols(mut self) -> Self where Self: Sized {
+        fn with_symbols(mut self) -> Self
+        where
+            Self: Sized,
+        {
             self.options().extend(SYMBOLS.iter());
             self
         }
@@ -50,6 +62,8 @@ pub mod random {
     /// ## Examples
     /// Random letter including from 'a' to 'z' and from 'A' to 'Z'
     /// ```
+    /// use random_str::random::{RandomCharBuilder, CharBuilder};
+    /// 
     /// let random_letter: Option<char> = RandomCharBuilder::new()
     ///     .with_lowercase()
     ///     .with_uppercase()
@@ -57,7 +71,7 @@ pub mod random {
     /// println!("Random letter: {}", random_letter.unwrap());
     /// ```
     pub struct RandomCharBuilder {
-        options: Vec<char>
+        options: Vec<char>,
     }
 
     impl CharBuilder for RandomCharBuilder {
@@ -68,7 +82,9 @@ pub mod random {
 
     impl RandomCharBuilder {
         pub fn new() -> Self {
-            RandomCharBuilder { options: Vec::new() }
+            RandomCharBuilder {
+                options: Vec::new(),
+            }
         }
 
         pub fn build(mut self) -> Option<char> {
@@ -96,6 +112,8 @@ pub mod random {
     /// ## Examples
     /// Random phone number
     /// ```
+    /// use random_str::random::{RandomStringBuilder, CharBuilder};
+    ///
     /// let digits: Option<String> = RandomStringBuilder::new()
     ///     .with_length(10)
     ///     .with_numbers()
@@ -105,6 +123,8 @@ pub mod random {
     /// ```
     /// Random password
     /// ```
+    /// use random_str::random::{RandomStringBuilder, CharBuilder};
+    ///
     /// let random_password: Option<String> = RandomStringBuilder::new()
     ///     .with_length(32)  // Optional, 16 as default
     ///     .with_lowercase()
@@ -116,7 +136,7 @@ pub mod random {
     /// ```
     pub struct RandomStringBuilder {
         options: Vec<char>,
-        length: usize
+        length: usize,
     }
 
     impl CharBuilder for RandomStringBuilder {
@@ -127,7 +147,10 @@ pub mod random {
 
     impl RandomStringBuilder {
         pub fn new() -> Self {
-            RandomStringBuilder { options: Vec::new(), length: 16 }
+            RandomStringBuilder {
+                options: Vec::new(),
+                length: 16,
+            }
         }
 
         pub fn with_length(mut self, length: usize) -> Self {
@@ -141,7 +164,11 @@ pub mod random {
             }
 
             let mut rng = rand::rng();
-            Some((0..=self.length).map(|_| *self.options().choose_mut(&mut rng).unwrap()).collect())
+            Some(
+                (0..=self.length)
+                    .map(|_| *self.options().choose_mut(&mut rng).unwrap())
+                    .collect(),
+            )
         }
     }
 
@@ -226,6 +253,27 @@ pub mod random {
         rng.random_range(min..=max)
     }
 
+    /// Get a random number within a range
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use random_str::random::{self};
+    ///
+    /// let random_number = random::number(0..=9);
+    /// assert!((0..=9).contains(&random_number))
+    /// ```
+    pub fn number<T, R>(range: R) -> T
+    where
+        T: SampleUniform,
+        R: SampleRange<T>,
+    {
+        use rand::RngExt;
+
+        let mut rng = rand::rng();
+        rng.random_range(range)
+    }
+
     /// Get a random symbol from a list of symbols
     /// Possible symbols are: #, $, %, &, *, @, ^
     ///
@@ -263,7 +311,13 @@ pub mod random {
     /// ```
     #[cfg(not(doctest))]
     #[deprecated(since = "1.0.0", note = "Use RandomStringBuilder instead")]
-    pub fn get_string(length: usize, lowercase: bool, uppercase: bool, numbers: bool, symbols: bool) -> String {
+    pub fn get_string(
+        length: usize,
+        lowercase: bool,
+        uppercase: bool,
+        numbers: bool,
+        symbols: bool,
+    ) -> String {
         let symbols_list: Vec<char> = get_symbols_list();
         let numbers_list: Vec<char> = (b'0'..=b'9').map(|c| c as char).collect();
         let cap_letters_list: Vec<char> = (b'A'..=b'Z').map(|c| c as char).collect();
@@ -284,7 +338,9 @@ pub mod random {
         }
 
         let mut rng = rand::rng();
-        (0..=length).map(|_| *random_string.choose_mut(&mut rng).unwrap()).collect()
+        (0..=length)
+            .map(|_| *random_string.choose_mut(&mut rng).unwrap())
+            .collect()
     }
 
     /// Get a random boolean value
@@ -310,12 +366,12 @@ pub mod random {
     /// # Example
     ///
     /// ```
+    /// use random_str::random::{self};
+    ///
     /// let random_bool = random::bool();
     /// println!("Random bool: {}", random_bool);
-    /// ```
-    /// Posible output:
-    /// ```txt
-    /// Random boolean: true
+    /// 
+    /// assert!(random_bool == true || random_bool == false);
     /// ```
     pub fn bool() -> bool {
         use rand::RngExt;
