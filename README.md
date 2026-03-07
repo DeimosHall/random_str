@@ -38,13 +38,13 @@ In your `Cargo.toml` file, add the following dependency:
 
 ```
 [dependencies]
-random_str = "1.0.0"
+random_str = "1.1.0"
 ```
 
-Use `cargo check` to download the dependency.
+Use `cargo build` to download the dependency.
 
 ```bash
-cargo check
+cargo build
 ```
 
 In your main.rs file write the following:
@@ -64,11 +64,12 @@ fn main() {
         .with_symbols()
         .build();
     println!("Random symbol: {}", random_symbol.unwrap());
-
-    let min = 0;
-    let max = 9;
-    let random_number = random::get_int(min, max); // Between 0 and 9
+    
+    let random_number = random::number(0..9);
     println!("Random number: {}", random_number);
+    
+    let another_random_number = random::number(1.0..2.0);
+    println!("Random float number: {}", another_random_number);
 
     let digits: Option<String> = RandomStringBuilder::new()
         .with_length(10)
@@ -100,12 +101,13 @@ cargo run
 Possible output:
 
 ```bash
-Random letter: y
-Random symbol: ^
-Random number: 8
-Random phone number: +52 77440263729
-Random password: kXVyDr4WWg*rg$NERs3ghXDY$g!VCkZ@c
-Random bool: false
+Random letter: C
+Random symbol: #
+Random number: 5
+Random float number: 1.487004718282926
+Random phone number: +52 11932115293
+Random password: M29Fd*tamf3spJxxZOVZRUil!vBjycUHD
+Random bool: true
 ```
 
 ## How to contribute
@@ -114,7 +116,7 @@ If you think there is a function that may be helpful, you can open a pull reques
 
 ## License
 
-This project is licensed under the MIT license. See the [LINCENSE](LICENSE) file for more information.
+This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more information.
 
 ## Credits
 
