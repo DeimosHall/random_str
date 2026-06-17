@@ -63,7 +63,7 @@ pub mod random {
     /// Random letter including from 'a' to 'z' and from 'A' to 'Z'
     /// ```
     /// use random_str::random::{RandomCharBuilder, CharBuilder};
-    /// 
+    ///
     /// let random_letter: Option<char> = RandomCharBuilder::new()
     ///     .with_lowercase()
     ///     .with_uppercase()
@@ -114,25 +114,27 @@ pub mod random {
     /// ```
     /// use random_str::random::{RandomStringBuilder, CharBuilder};
     ///
-    /// let digits: Option<String> = RandomStringBuilder::new()
+    /// let digits = RandomStringBuilder::new()
     ///     .with_length(10)
     ///     .with_numbers()
-    ///     .build();
-    /// let random_phone_number = format!("+52 {}", digits.unwrap());
+    ///     .build().unwrap();
+    /// assert_eq!(digits.len(), 10);
+    /// let random_phone_number = format!("+52 {}", digits);
     /// println!("Random phone number: {}", random_phone_number);
     /// ```
     /// Random password
     /// ```
     /// use random_str::random::{RandomStringBuilder, CharBuilder};
     ///
-    /// let random_password: Option<String> = RandomStringBuilder::new()
+    /// let random_password = RandomStringBuilder::new()
     ///     .with_length(32)  // Optional, 16 as default
     ///     .with_lowercase()
     ///     .with_uppercase()
     ///     .with_numbers()
     ///     .with_symbols()
-    ///    .build();
-    /// println!("Random password: {}", random_password.unwrap());
+    ///    .build().unwrap();
+    /// assert_eq!(random_password.len(), 32);
+    /// println!("Random password: {}", random_password);
     /// ```
     pub struct RandomStringBuilder {
         options: Vec<char>,
@@ -165,7 +167,7 @@ pub mod random {
 
             let mut rng = rand::rng();
             Some(
-                (0..=self.length)
+                (0..self.length)
                     .map(|_| *self.options().choose_mut(&mut rng).unwrap())
                     .collect(),
             )
@@ -338,7 +340,7 @@ pub mod random {
         }
 
         let mut rng = rand::rng();
-        (0..=length)
+        (0..length)
             .map(|_| *random_string.choose_mut(&mut rng).unwrap())
             .collect()
     }
@@ -370,7 +372,7 @@ pub mod random {
     ///
     /// let random_bool = random::bool();
     /// println!("Random bool: {}", random_bool);
-    /// 
+    ///
     /// assert!(random_bool == true || random_bool == false);
     /// ```
     pub fn bool() -> bool {
@@ -393,6 +395,7 @@ pub mod random {
 
         #[test]
         fn test_get_random_lowercase_letter() {
+            #[allow(deprecated)]
             let random_letter = get_letter(true, false);
             assert!(random_letter.is_ascii_alphabetic());
             assert!(random_letter.is_ascii_lowercase());
@@ -400,6 +403,7 @@ pub mod random {
 
         #[test]
         fn test_get_random_uppercase_letter() {
+            #[allow(deprecated)]
             let random_letter = get_letter(false, true);
             assert!(random_letter.is_ascii_alphabetic());
             assert!(random_letter.is_ascii_uppercase());
@@ -407,6 +411,7 @@ pub mod random {
 
         #[test]
         fn test_get_random_letter() {
+            #[allow(deprecated)]
             let random_letter = get_letter(true, true);
             assert!(random_letter.is_ascii_alphabetic());
         }
@@ -414,7 +419,10 @@ pub mod random {
         #[test]
         // Validate if the function panics when both parameters are false
         fn test_get_random_false_letter() {
-            let result = std::panic::catch_unwind(|| get_letter(false, false));
+            let result = std::panic::catch_unwind(
+                #[allow(deprecated)]
+                || get_letter(false, false),
+            );
             assert!(result.is_err());
         }
     }
