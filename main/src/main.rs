@@ -8,14 +8,12 @@ fn main() {
         .build();
     println!("Random letter: {}", random_letter.unwrap());
 
-    let random_symbol: Option<char> = RandomCharBuilder::new()
-        .with_symbols()
-        .build();
+    let random_symbol: Option<char> = RandomCharBuilder::new().with_symbols().build();
     println!("Random symbol: {}", random_symbol.unwrap());
-    
+
     let random_number = random::number(0..9);
     println!("Random number: {}", random_number);
-    
+
     let another_random_number = random::number(1.0..2.0);
     println!("Random float number: {}", another_random_number);
 
@@ -27,7 +25,7 @@ fn main() {
     println!("Random phone number: {}", random_phone_number);
 
     let random_password: Option<String> = RandomStringBuilder::new()
-        .with_length(32)  // Optional, 16 as default
+        .with_length(32) // Optional, 16 as default
         .with_lowercase()
         .with_uppercase()
         .with_numbers()
