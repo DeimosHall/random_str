@@ -395,6 +395,7 @@ pub mod random {
 
         #[test]
         fn test_get_random_lowercase_letter() {
+            #[allow(deprecated)]
             let random_letter = get_letter(true, false);
             assert!(random_letter.is_ascii_alphabetic());
             assert!(random_letter.is_ascii_lowercase());
@@ -402,6 +403,7 @@ pub mod random {
 
         #[test]
         fn test_get_random_uppercase_letter() {
+            #[allow(deprecated)]
             let random_letter = get_letter(false, true);
             assert!(random_letter.is_ascii_alphabetic());
             assert!(random_letter.is_ascii_uppercase());
@@ -409,6 +411,7 @@ pub mod random {
 
         #[test]
         fn test_get_random_letter() {
+            #[allow(deprecated)]
             let random_letter = get_letter(true, true);
             assert!(random_letter.is_ascii_alphabetic());
         }
@@ -416,7 +419,10 @@ pub mod random {
         #[test]
         // Validate if the function panics when both parameters are false
         fn test_get_random_false_letter() {
-            let result = std::panic::catch_unwind(|| get_letter(false, false));
+            let result = std::panic::catch_unwind(
+                #[allow(deprecated)]
+                || get_letter(false, false),
+            );
             assert!(result.is_err());
         }
     }
