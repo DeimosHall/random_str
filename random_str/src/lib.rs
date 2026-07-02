@@ -1,3 +1,5 @@
+#![doc = include_str!("../README.md")]
+
 //! This crate provides a set of functions to generate random strings, numbers, letters, symbols and booleans.
 pub mod random {
     use rand::{
