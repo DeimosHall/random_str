@@ -1,10 +1,11 @@
 [package]
 name = "random_str"
-version = "1.1.0"
+version = "1.1.1"
 edition = "2024"
 rust-version = "1.85.0"
+authors = ["Deimos Hall <deimoshall.dev@proton.me>"]
 description = "Generate random strings, chars, booleans, and integers."
-license = "MIT"
+license = "BSD-2-Clause OR Apache-2.0 OR MIT"
 repository = "https://github.com/DeimosHall/random_str"
 
 [dependencies]
