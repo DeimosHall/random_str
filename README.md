@@ -36,7 +36,7 @@ cargo new my_project
 
 In your `Cargo.toml` file, add the following dependency:
 
-```
+```toml
 [dependencies]
 random_str = "1.1.0"
 ```
@@ -116,7 +116,11 @@ If you think there is a function that may be helpful, you can open a pull reques
 
 ## License
 
-This project is licensed under the MIT license. See the [LICENSE](LICENSE) file for more information.
+This project is tri-licensed under:
+
+- [BSD-2-Clause](LICENSE-BSD)
+- [Apache-2.0](LICENSE-APACHE)
+- [MIT](LICENSE-MIT)
 
 ## Credits
 
